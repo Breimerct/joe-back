@@ -58,33 +58,6 @@ export const createUser = async (req: Request, res: Response) => {
             })
         }
     } catch (e: any) {
-        if (e.hasOwnProperty('errors')) {
-            if (e.errors.hasOwnProperty('user')) {
-                let message = e.errors.user.message.replace('Path', 'Field')
-                res.send({
-                    message: message
-                }).status(500)
-            } else if (e.errors.hasOwnProperty('email')) {
-                let message = e.errors.email.message.replace('Path', 'Field')
-                res.send({
-                    message: message
-                }).status(500)
-            }
-            return
-        } else {
-            if (e.keyValue.email === email) {
-                res.send({
-                    message: "There is already an account with this email",
-                    ...e.keyValue
-                }).status(500)
-            } else if (e.keyValue.user === user) {
-                res.send({
-                    message: "There is already an account with this user",
-                    ...e.keyValue
-                }).status(500)
-            }
-            return
-        }
         res.send({
             status: e.statusCode ? e.statusCode : 500,
             message: e.message ? e.message : e,
@@ -154,8 +127,9 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
         }
     } catch (e: any) {
         res.send({
-            message: e.message || e
-        }).status(e.code || 500)
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }
 
@@ -177,7 +151,8 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
         }
     } catch (e: any) {
         res.send({
-            message: e.message || e
-        }).status(e.code || 500)
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }

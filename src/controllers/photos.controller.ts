@@ -141,7 +141,8 @@ export const deletePhoto = async (req: Request, res: Response): Promise<void> =>
         }
     } catch (e: any) {
         res.send({
-            message: e.message || e
-        }).status(e.code || 500)
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }

@@ -24,8 +24,11 @@ export const getPhotoShoots = async (req: Request, res: Response) => {
             totalItems,
             photoShootList: data
         })
-    } catch (e) {
-        res.send(e).status(500)
+    } catch (e: any) {
+        res.send({
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }
 
@@ -42,8 +45,11 @@ export const getPhotoShootById = async (req: Request, res: Response) => {
                 status : 404
             }).status(404)
         }
-    } catch (e) {
-        res.send(e).status(500)
+    } catch (e: any) {
+        res.send({
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }
 
@@ -65,23 +71,10 @@ export const createPhotoShoot = async (req: Request, res: Response) => {
             })
         }
     } catch (e: any) {
-        if (e.keyValue.hasOwnProperty('title')) {
-            if (e.keyValue.title === title) {
-                res.send({
-                    message: "There is already an photo with this title.",
-                    ...e.keyValue
-                }).status(500)
-            } else {
-                res.send({
-                    message: e.message || e
-                }).status(e.code || 500)
-            }
-        } else {
-            res.send({
-                status: e.statusCode ? e.statusCode : 500,
-                message: e.message ? e.message : e,
-            }).status(500)
-        }
+        res.send({
+            status: e.statusCode ? e.statusCode : 500,
+            message: e.message ? e.message : e,
+        }).status(500)
     }
 }
 
