@@ -23,8 +23,8 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
         }
         next()
     } catch (e: any) {
-        res.send({
+        res.status(500).send({
             message: e.message.replace('jwt', 'Token')
-        }).status(500)
+        })
     }
 }

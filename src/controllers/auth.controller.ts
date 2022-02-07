@@ -30,21 +30,24 @@ export const login = async (req: Request, res: Response) => {
                     user: payload
                 })
             } else {
-                res.send({
+                throw {
                     message: "password incorrect",
                     status : 401
-                }).status(401)
+                }
             }
         } else {
-            res.send({
-                message: "user not found",
+            throw {
+                user: user,
+                message: "User not found",
                 status : 404
-            }).status(404)
+            }
         }
     } catch (e: any) {
-        res.send({
-            message: e.message ? e.message : e
-        }).status(500)
+        res.status(e.status || 500)
+            .send({
+                status: e.status ? e.status : 500,
+                message: e.message ? e.message : e,
+            })
     }
 }
 
@@ -54,16 +57,21 @@ export const getUserLogged = async (req: Request, res: Response) => {
         const user = await  users.findById(_id, { __v: 0, password: 0 })
 
         if (user) {
-            res.send({
+            res.status(200).send({
                 user
-            }).status(200)
+            })
         } else {
-            res.send({
+            throw {
                 userId: _id,
-                message: "User not found"
-            }).status(404)
+                message: "User not found",
+                status : 404
+            }
         }
     }catch (e: any) {
-        
+        res.status(e.status || 500)
+            .send({
+                status: e.status ? e.status : 500,
+                message: e.message ? e.message : e,
+            })
     }
 }

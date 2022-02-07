@@ -22,13 +22,14 @@ export const getPhotoShoots = async (req: Request, res: Response) => {
         }
         res.send({
             totalItems,
-            photoShootList: data
+            photoShootList: data,
+            status: 200
         })
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -40,16 +41,17 @@ export const getPhotoShootById = async (req: Request, res: Response) => {
         if (photoShoot) {
             res.send(photoShoot)
         } else {
-            res.send({
+            throw {
                 message: "Photo shoot not found",
-                status : 404
-            }).status(404)
+                status : 404,
+                photoShootId
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -64,17 +66,16 @@ export const createPhotoShoot = async (req: Request, res: Response) => {
             location: location.toString().toLocaleLowerCase()
         })
         if (photoShoot) {
-            res.send({
+            throw {
                 message: "Photo created successfully",
-                statusCode: "Ok!",
                 status: 200
-            })
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -94,19 +95,20 @@ export const updatePhotoShoot = async (req: Request, res: Response): Promise<voi
             photoShoot.date = isUndefined(date) ? photoShoot.date : date
             await photoShoot.save()
             res.send({
-                photoShoot: photoShoot
+                photoShoot: photoShoot,
+                status: 200
             })
         } else {
-            res.send({
+            throw {
                 message: "photo not found",
                 status: 404
-            }).status(404)
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -117,18 +119,18 @@ export const deletePhoto = async (req: Request, res: Response): Promise<void> =>
         const photoShoot = await photoShoots.findByIdAndDelete(photoShootId).select({__v: 0})
         if (photoShoot) {
             res.send({
-                status : "Ok!",
                 message: "Photo shoot deleted"
             })
         } else {
-            res.send({
+            throw {
                 message: "Photo shoot not found",
                 status : 404
-            }).status(404)
+            }
         }
     } catch (e: any) {
-        res.send({
-            message: e.message || e
-        }).status(e.code || 500)
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
+            message: e.message ? e.message : e,
+        })
     }
 }

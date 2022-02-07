@@ -14,13 +14,14 @@ export const getPhotos = async (req: Request, res: Response) => {
 
         res.send({
             totalItems,
-            photoList
+            photoList,
+            status: 200
         })
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -33,16 +34,17 @@ export const getPhotoById = async (req: Request, res: Response): Promise<void> =
         if (photo) {
             res.send(photo)
         } else {
-            res.send({
+            throw {
                 message: "photo not found",
-                status : 404
-            }).status(404)
+                status : 404,
+                photoId
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -72,22 +74,20 @@ export const createPhoto = async (req: Request, res: Response) => {
             if (photo) {
                 res.send({
                     message: "Photo created successfully",
-                    statusCode: "Ok!",
                     status: 200
                 })
             }
         } else {
-            res.send({
+            throw {
                 message: "You can only register a total of 5 photos for each photo shoots",
-                statusCode: "Ok!",
                 status: 401
-            })
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -107,19 +107,21 @@ export const updatePhoto = async (req: Request, res: Response): Promise<void> =>
             photo.date = date || isUndefined(date) ? photo.date : date!.toString().toLocaleLowerCase()
             await photo.save()
             res.send({
-                photo: photo
+                photo: photo,
+                status: 200
             })
         } else {
-            res.send({
+            throw {
                 message: "photo not found",
-                status: 404
-            }).status(404)
+                status: 404,
+                photoId
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }
 
@@ -130,19 +132,20 @@ export const deletePhoto = async (req: Request, res: Response): Promise<void> =>
         const photo = await photos.findByIdAndDelete(photoId).select({__v: 0})
         if (photo) {
             res.send({
-                status : "Ok!",
-                message: "Photo deleted"
+                message: "Photo deleted",
+                status: 200
             })
         } else {
-            res.send({
+            throw {
                 message: "Photo not found",
-                status : 404
-            }).status(404)
+                status : 404,
+                photoId
+            }
         }
     } catch (e: any) {
-        res.send({
-            status: e.statusCode ? e.statusCode : 500,
+        res.status(e.status || 500).send({
+            status: e.status ? e.status : 500,
             message: e.message ? e.message : e,
-        }).status(500)
+        })
     }
 }

@@ -5,6 +5,7 @@ export interface IUser {
     user?: string,
     name?: string,
     lastname?: string,
+    fullName?: string,
     email?: string,
     password?: string
 }
@@ -20,6 +21,10 @@ const userSchema = new Schema({
         required: true
     },
     lastname: {
+        type: String,
+        required: true
+    },
+    fullName: {
         type: String,
         required: true
     },
