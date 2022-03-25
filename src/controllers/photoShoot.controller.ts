@@ -15,8 +15,8 @@ export const getPhotoShoots = async (req: Request, res: Response) => {
                 _id: photoShoot._id,
                 title: photoShoot.title,
                 description: photoShoot.description,
-                date: photoShoot.location,
-                location: photoShoot.date,
+                date: photoShoot.date,
+                location: photoShoot.location,
                 photos: photoList
             })
         }

@@ -34,7 +34,7 @@ const photoSchema = new Schema({
     photoShoot: {
         type: Schema.Types.ObjectId,
         ref: 'photo-shoot',
-        required: true
+        required: false
     }
 })
 
