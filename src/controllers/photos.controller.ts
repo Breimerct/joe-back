@@ -176,18 +176,15 @@ const createPhotoWithOutPhotoShootId = (file: any, data: any) => {
                 title: data.title.toString().toLocaleLowerCase(),
                 description: data.description.toString().toLocaleLowerCase(),
                 date: data.date.toString().toLocaleLowerCase(),
-                isVisible: data.isVisible,
-                url: file.path
+                isVisible: data.isVisible
             }
 
-            /*
             if (file) {
                 const result = await cloudinary.uploader.upload(file.path)
                 newPhoto.url = result.url
             }
-            */
 
-            // await fs.unlink(file?.path!)
+            await fs.unlink(file?.path!)
 
             const photo: IPhoto = await photos.create(newPhoto)
             if (photo) {
