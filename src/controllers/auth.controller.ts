@@ -53,11 +53,13 @@ export const login = async (req: Request, res: Response) => {
 
 export const getUserLogged = async (req: Request, res: Response) => {
     const { _id } = req.session
+    const { token } = req.headers
     try {
         const user = await  users.findById(_id, { __v: 0, password: 0 })
 
         if (user) {
             res.status(200).send({
+                token: token,
                 user
             })
         } else {

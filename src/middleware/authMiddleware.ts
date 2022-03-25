@@ -12,7 +12,7 @@ declare global {
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
     try {
-        const {token} = req.headers
+        const { token } = req.headers
         if (!token) {
             throw new Error("missing header token")
         }
